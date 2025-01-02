@@ -4,7 +4,10 @@
 @using MicrsoftToDo.Service
 @inject TodoService TodoService
 
-<h3>To-Do App</h3>
+<div class="col-md-12">
+
+
+<h3 class="mt-4">To-Do App</h3>
 
 <div class="m-2">
     <input @bind="newTodoTitle" placeholder="Enter a new task" />
@@ -51,7 +54,7 @@
         color: gray; /* Optional: Makes the text gray for completed tasks */
     }
 </style>
-
+</div>
 @code {
     private List<TodoItem> Todos;
     private string newTodoTitle;
