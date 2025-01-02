@@ -1,0 +1,126 @@
+﻿@page "/"
+@using System.Linq
+@using MicrsoftToDo.Models
+@using MicrsoftToDo.Service
+@inject TodoService TodoService
+
+<h3>To-Do App</h3>
+
+<div class="m-2">
+    <input @bind="newTodoTitle" placeholder="Enter a new task" />
+    <input type="datetime-local" @bind="newTodoStartDate" />
+    <input type="datetime-local" @bind="newTodoDueDate" />
+    <button @onclick="AddTodo">Add</button>
+</div>
+
+<ul>
+    @if (Todos != null && Todos.Any())
+    {
+        @foreach (var todo in Todos)
+        {
+            var isDueSoon = !todo.IsCompleted && todo.DueDate < DateTime.Now.AddDays(1);
+            var taskStyle = isDueSoon ? "background-color: red;" : "";
+            var taskClass = todo.IsCompleted ? "completed-task" : "";
+          
+
+            <li style="@taskStyle" class="@taskClass">
+                <input type="checkbox" @bind="todo.IsCompleted"  />
+                @if (editTodoId == todo.Id)
+                {
+                    <input @bind="editTodoTitle" />
+                    <button @onclick="() => UpdateTodo(todo.Id)">Save</button>
+                    <button @onclick="CancelEdit">Cancel</button>
+                }
+                else
+                {
+                    <span>@todo.Title</span>
+                    <button @onclick="() => StartEdit(todo.Id, todo.Title)">Edit</button>
+                    <button @onclick="() => DeleteTodo(todo.Id)">Delete</button>
+                }
+            </li>
+        }
+    }
+    else
+    {
+        <li>No tasks available.</li>
+    }
+</ul>
+<style>
+    .completed-task {
+        text-decoration: line-through; /* Adds the line-through effect */
+        color: gray; /* Optional: Makes the text gray for completed tasks */
+    }
+</style>
+
+@code {
+    private List<TodoItem> Todos;
+    private string newTodoTitle;
+    private DateTime newTodoStartDate = DateTime.Now;
+    private DateTime newTodoDueDate = DateTime.Now.AddDays(1);
+    private int? editTodoId;
+    private string editTodoTitle;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Todos = await TodoService.GetTodosAsync();
+    }
+
+    private async Task AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodoTitle))
+        {
+            var todo = new TodoItem
+            {
+                Title = newTodoTitle,
+                StartDate = newTodoStartDate,
+                DueDate = newTodoDueDate,
+                IsCompleted = false
+            };
+
+            await TodoService.AddTodoAsync(todo);
+            Todos = await TodoService.GetTodosAsync();  // Re-fetch the list
+            newTodoTitle = string.Empty;
+        }
+    }
+
+    private async Task DeleteTodo(int id)
+    {
+        await TodoService.DeleteTodoAsync(id);
+        Todos = await TodoService.GetTodosAsync();  // Re-fetch the list
+    }
+
+    private void StartEdit(int id, string title)
+    {
+        editTodoId = id;
+        editTodoTitle = title;
+    }
+
+    private async Task UpdateTodoCompletion(int id)
+    {
+        var todo = Todos.FirstOrDefault(t => t.Id == id);
+        if (todo != null)
+        {
+            todo.IsCompleted = !todo.IsCompleted;
+            await TodoService.UpdateTodoAsync(todo);
+            Todos = await TodoService.GetTodosAsync();  // Re-fetch the list
+        }
+    }
+
+    private async Task UpdateTodo(int id)
+    {
+        var todo = Todos.FirstOrDefault(t => t.Id == id);
+        if (todo != null && !string.IsNullOrWhiteSpace(editTodoTitle))
+        {
+            todo.Title = editTodoTitle;
+            await TodoService.UpdateTodoAsync(todo);
+            Todos = await TodoService.GetTodosAsync();  // Re-fetch the list
+            CancelEdit();
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editTodoId = null;
+        editTodoTitle = string.Empty;
+    }
+}
