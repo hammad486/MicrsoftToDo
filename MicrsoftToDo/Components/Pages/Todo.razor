@@ -4,28 +4,6 @@
 @using MicrsoftToDo.Service
 @inject TodoService TodoService
 
-@* <div class="col-md-12 bg-secondary">
-    <div class="sidebar-container" style="display: flex; height: 100vh;">
-      <div class="sidebar" style="width: 250px; background-color: #333; color: yellowgreen; padding: 10px;">
-        <h2>Todo Menu</h2>
-        <ul style="list-style: none; padding: 10px;">
-            <li><a href="#" style="color: white; text-decoration: none; padding: 10px; display: block;">Home</a></li>
-            <li><a href="#" style="color: white; text-decoration: none; padding: 10px; display: block;">About</a></li>
-            <li><a href="#" style="color: white; text-decoration: none; padding: 10px; display: block;">Services</a></li>
-            <li><a href="#" style="color: white; text-decoration: none; padding: 10px; display: block;">Contact</a></li>
-        </ul>
-     </div>
-            <div class="row ml-3">
-                <div class="col-md-10">
-                    <h3>My Todo</h3>
-                </div>
-                <div class="col-md-2">
-                <button class="btn-sm btn btn-info">Add Todo</button>
-                </div>
-            </div>
-  </div>
-</div> *@
-
 <div class="col-md-12">
 <div class="col-md-3">
 
@@ -70,12 +48,31 @@
                 <div class="card-header">
                     <div class="row">
                     <div class="col-md-3">
-                        <h4>@todo.Title</h4>
-                    </div>
+                                    <h4 style="text-decoration: @(todo.IsCompleted ? "line-through" : "none");">
+                                        <input class="ml-2 mr-2" type="checkbox" @checked="@todo.IsCompleted" style="margin-right: 5px;" />
+                                        @todo.Title
+                                    </h4>
+                                </div>
                     <div class="col-md-3">
                                 @if (@todo.IsCompleted == false)
                                 {
-                                    <p style="color:yellow"><strong>InProgress:</strong></p>
+                                        <p style="color:black;">
+                                            <strong>InProgress:</strong>
+                                            <!-- Circle before the text -->
+                                            <span class="inprogress-circle"></span>
+                                        </p>
+
+                                        <style>
+                                            .inprogress-circle {
+                                                display: inline-block;
+                                                width: 15px; /* Circle size */
+                                                height: 15px;
+                                                background-color: yellow; /* Circle color */
+                                                border-radius: 50%; /* Make it a circle */
+                                                margin-left: 5px; /* Space between text and circle */
+                                                vertical-align: middle; /* Align circle with text */
+                                            }
+                                        </style>
                                 }
                                 else
                                 {
