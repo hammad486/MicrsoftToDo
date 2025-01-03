@@ -5,10 +5,10 @@
 @inject TodoService TodoService
 
 <div class="col-md-12">
-<div class="col-md-3">
+    <div class="col-md-3">
 
-</div>
-<div>
+    </div>
+    <div>
         <div class="row mt-3 ">
             <div class="col-md-10">
                 <h3 class="w-100">My Todo</h3>
@@ -22,7 +22,7 @@
                 <input @bind="newTodoTitle" placeholder="Search Task" />
             </div>
             <div class="col-md-3">
-               
+
             </div>
             <div class="col-md-3">
                 <input type="datetime-local" @bind="newTodoStartDate" />
@@ -35,71 +35,81 @@
         <br />
         <br />
 
-<ul>
-    @if (Todos != null && Todos.Any())
-    {
+
+
+
         @foreach (var todo in Todos)
         {
-            var isDueSoon = !todo.IsCompleted && todo.DueDate < DateTime.Now.AddDays(1);
+            @* var isDueSoon = !todo.IsCompleted && todo.DueDate < DateTime.Now.AddDays(1);
             var taskStyle = isDueSoon ? "background-color: red;" : "";
-            var taskClass = todo.IsCompleted ? "completed-task" : "";
-          
-             <div class="card">
+            var taskClass = todo.IsCompleted ? "completed-task" : ""; *@
+
+            <div class="card">
                 <div class="card-header">
                     <div class="row">
-                    <div class="col-md-3">
-                                    <h4 style="text-decoration: @(todo.IsCompleted ? "line-through" : "none");">
-                                        <input class="ml-2 mr-2" type="checkbox" @checked="@todo.IsCompleted" style="margin-right: 5px;" />
-                                        @todo.Title
-                                    </h4>
-                                </div>
-                    <div class="col-md-3">
-                                @if (@todo.IsCompleted == false)
-                                {
-                                        <p style="color:black;">
-                                            <strong>InProgress:</strong>
-                                            <!-- Circle before the text -->
-                                            <span class="inprogress-circle"></span>
-                                        </p>
+                        <div class="col-md-3">
+                            <h4 style="text-decoration: @(todo.IsCompleted ? "line-through" : "none");">
+                                <input class="ml-2 mr-2" type="checkbox" @* @checked="@todo.IsCompleted" *@ style="margin-right: 5px;" />
+                                @todo.Title
+                            </h4>
+                        </div>
+                        <div class="col-md-3">
+                            @if (@todo.IsCompleted == false)
+                            {
+                                <p style="color:black;">
+                                    <strong>InProgress:</strong>
+                                    <!-- Circle before the text -->
+                                    <span class="inprogress-circle"></span>
+                                </p>
 
-                                        <style>
-                                            .inprogress-circle {
-                                                display: inline-block;
-                                                width: 15px; /* Circle size */
-                                                height: 15px;
-                                                background-color: yellow; /* Circle color */
-                                                border-radius: 50%; /* Make it a circle */
-                                                margin-left: 5px; /* Space between text and circle */
-                                                vertical-align: middle; /* Align circle with text */
-                                            }
-                                        </style>
-                                }
-                                else
-                                {
-                                    <p style="color:forestgreen"><strong>Completed:</strong></p>
-                                }
+                                <style>
+                                    .inprogress-circle {
+                                    display: inline-block;
+                                    width: 15px; /* Circle size */
+                                    height: 15px;
+                                    background-color: yellow; /* Circle color */
+                                    border-radius: 50%; /* Make it a circle */
+                                    margin-left: 5px; /* Space between text and circle */
+                                    vertical-align: middle; /* Align circle with text */
+                                    }
+                                </style>
+                            }
+                            else
+                            {
+                                <p style="color:black;">
+                                    <strong>Completed:</strong>
+                                    <!-- Circle before the text -->
+                                    <span class="circle"></span>
+                                </p>
+                                <style>
+                                    .circle {
+                                        display: inline-block;
+                                        width: 15px; /* Circle size */
+                                        height: 15px;
+                                        background-color: green; /* Circle color */
+                                        border-radius: 50%; /* Make it a circle */
+                                        margin-left: 5px; /* Space between text and circle */
+                                        vertical-align: middle; /* Align circle with text */
+                                    }
+                                </style>
+                            }
+                        </div>
                     </div>
+                    <br />
                 </div>
-                </div>
-                          
-                   
-                
-                        <div class="separator"></div> <!-- Yellow thick line -->
-                    </div>
+                @*   <div class="separator"></div> <!-- Yellow thick line --> *@
+            </div>
 
         }
-    }
-    else
-    {
-        <li>No tasks available.</li>
-    }
-</ul>
- </div>
+
+
+
+    </div>
 </div>
 
 
 @code {
-    private List<TodoItem> Todos;
+    private List<TodoItem> Todos= new List<TodoItem>();
     private string newTodoTitle;
     private DateTime newTodoStartDate = DateTime.Now;
     private DateTime newTodoDueDate = DateTime.Now.AddDays(1);
