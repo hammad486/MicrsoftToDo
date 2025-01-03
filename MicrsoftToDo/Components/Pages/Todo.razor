@@ -44,7 +44,7 @@
             var taskStyle = isDueSoon ? "background-color: red;" : "";
             var taskClass = todo.IsCompleted ? "completed-task" : ""; *@
 
-            <div class="card">
+            <div class="card pb-2">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-3">
@@ -94,15 +94,22 @@
                                 </style>
                             }
                         </div>
+                        <div class="col-md-3">
+                            <p>Created At: <span>@todo.StartDate.ToString("yyyy-MM-dd")</span></p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>Due Date: <span>@todo.DueDate.ToString("yyyy-MM-dd")</span></p>
+                        </div>
+
                     </div>
-                    <br />
+     
                 </div>
                 @*   <div class="separator"></div> <!-- Yellow thick line --> *@
             </div>
 
         }
 
-
+        <br/>
 
     </div>
 </div>
