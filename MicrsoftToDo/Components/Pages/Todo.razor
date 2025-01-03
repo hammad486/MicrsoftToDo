@@ -31,7 +31,7 @@
 
 </div>
 <div>
-        <div class="row mt-3">
+        <div class="row mt-3 ">
             <div class="col-md-10">
                 <h3 class="w-100">My Todo</h3>
             </div>
@@ -54,7 +54,8 @@
             </div>
         </div>
 
-
+        <br />
+        <br />
 
 <ul>
     @if (Todos != null && Todos.Any())
@@ -65,22 +66,30 @@
             var taskStyle = isDueSoon ? "background-color: red;" : "";
             var taskClass = todo.IsCompleted ? "completed-task" : "";
           
+             <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                    <div class="col-md-3">
+                        <h4>@todo.Title</h4>
+                    </div>
+                    <div class="col-md-3">
+                                @if (@todo.IsCompleted == false)
+                                {
+                                    <p style="color:yellow"><strong>InProgress:</strong></p>
+                                }
+                                else
+                                {
+                                    <p style="color:forestgreen"><strong>Completed:</strong></p>
+                                }
+                    </div>
+                </div>
+                </div>
+                          
+                   
+                
+                        <div class="separator"></div> <!-- Yellow thick line -->
+                    </div>
 
-            <li style="@taskStyle" class="@taskClass">
-                <input type="checkbox" @bind="todo.IsCompleted"  />
-                @if (editTodoId == todo.Id)
-                {
-                    <input @bind="editTodoTitle" />
-                    <button @onclick="() => UpdateTodo(todo.Id)">Save</button>
-                    <button @onclick="CancelEdit">Cancel</button>
-                }
-                else
-                {
-                    <span>@todo.Title</span>
-                    <button @onclick="() => StartEdit(todo.Id, todo.Title)">Edit</button>
-                    <button @onclick="() => DeleteTodo(todo.Id)">Delete</button>
-                }
-            </li>
         }
     }
     else
@@ -88,12 +97,6 @@
         <li>No tasks available.</li>
     }
 </ul>
-  <style>
-    .completed-task {
-        text-decoration: line-through; /* Adds the line-through effect */
-        color: green; /* Optional: Makes the text gray for completed tasks */
-    }
-  </style>
  </div>
 </div>
 
