@@ -6,7 +6,7 @@
 
 <div class="col-md-12">
     <div class="col-md-3">
-    
+
     </div>
     <div>
         <div class="row mt-3 ">
@@ -40,7 +40,8 @@
                     <div class="row">
                         <div class="col-md-3">
                             <h5 style="text-decoration: @(todo.IsCompleted ? "line-through" : "none");">
-                                <input  class="ml-2 mr-2" type="checkbox" @checked="todo.IsCompleted" style="margin-right: 5px;" />
+                                <input class="ml-2 mr-2" type="checkbox" @onchange="() => ToggleCompletion(todo)"  style="margin-right: 5px;" />
+                                <span ></span>
                                 @todo.Title
                             </h5>
                         </div>
@@ -101,7 +102,7 @@
                         <div class="col-md-3">
                             <div style="margin-left:40px;" class="icon-container">
                                 <!-- Edit Icon -->
-                                <button @onclick="()=>UpdateTodoCompletion(todo.Id)">
+                                <button @onclick="()=>UpdateTodoCompletion(todo.Id,todo)">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
 
@@ -112,16 +113,16 @@
                             </div>
                             <style>
                                 .icon-container button {
-                                    background-color: transparent;
-                                    border: none;
-                                    font-size: 13px;
-                                    cursor: pointer;
-                                    margin: 4px;
+                                background-color: transparent;
+                                border: none;
+                                font-size: 13px;
+                                cursor: pointer;
+                                margin: 4px;
                                 }
 
-                                    .icon-container button:hover {
-                                        color: #007bff;
-                                    }
+                                .icon-container button:hover {
+                                color: #007bff;
+                                }
                             </style>
                         </div>
                     </div>
@@ -194,10 +195,16 @@
         Todos = await TodoService.GetTodosAsync();
     }
 
+    private void ToggleCompletion(TodoItem todo)
+    {
+        todo.IsCompleted = !todo.IsCompleted;
+    }
+
+
 
     private void OpenModal()
     {
-     
+
         isModalVisible = true;  
     }
     private async Task AddTodo(TodoItem model)
@@ -228,14 +235,22 @@
         editTodoTitle = title;
     }
 
-    private async Task UpdateTodoCompletion(int id)
+    private async Task UpdateTodoCompletion(int id,TodoItem tod)
     {
         var todo = Todos.FirstOrDefault(t => t.Id == id);
         if (todo != null)
         {
-            todo.IsCompleted = !todo.IsCompleted;
+            if (tod.IsCompleted == false)
+            {
+                todo.IsCompleted = false;
+            }
+            else if(tod.IsCompleted==true)
+            { 
+                todo.IsCompleted = true;
+            }
+          
             await TodoService.UpdateTodoAsync(todo);
-            Todos = await TodoService.GetTodosAsync();  // Re-fetch the list
+            Todos = await TodoService.GetTodosAsync();  
         }
     }
 
