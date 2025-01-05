@@ -1,0 +1,76 @@
+﻿
+
+@page "/popup-modal"
+@inject HttpClient Http
+
+<!-- Button to open the modal -->
+<button class="btn btn-primary" @onclick="OpenModal">Open Form</button>
+
+<!-- Modal HTML -->
+@if (isModalVisible)
+{
+    <div class="modal-overlay">
+        <div class="modal">
+            <h3>Popup Form</h3>
+            <EditForm Model="formData" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <!-- Form Fields -->
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <InputText id="name" class="form-control" @bind-Value="formData.Name" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <InputText id="email" class="form-control" @bind-Value="formData.Email" />
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isModalVisible = false;
+    private FormData formData = new FormData();
+
+    // Open the modal
+    private void OpenModal()
+    {
+        isModalVisible = true;
+    }
+
+    // Close the modal
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    // Handle the form submission
+    private async Task HandleSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("https://your-api-endpoint.com/submit", formData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Handle success
+            Console.WriteLine("Form submitted successfully.");
+            CloseModal();
+        }
+        else
+        {
+            // Handle failure
+            Console.WriteLine("Form submission failed.");
+        }
+    }
+
+    public class FormData
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+    }
+}

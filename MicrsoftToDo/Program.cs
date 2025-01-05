@@ -11,6 +11,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<TodoService>();
 builder.Services.AddDbContext<TodoDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7166/") });
+        
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
