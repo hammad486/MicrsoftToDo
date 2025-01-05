@@ -14,7 +14,7 @@
                 <h3 class="w-100">My Todo</h3>
             </div>
             <div class="col-md-2">
-                <button class="btn-sm btn btn-info text-light">Add Todo</button>
+                <button class="btn-sm btn btn-info text-light" @onclick="()=>OpenModal()">Add Todo</button>
             </div>
         </div>
         <div class="row mt-2">
@@ -31,27 +31,18 @@
                 <input type="datetime-local" @bind="newTodoDueDate" />
             </div>
         </div>
-
         <br />
         <br />
-
-
-
-
         @foreach (var todo in Todos)
         {
-            @* var isDueSoon = !todo.IsCompleted && todo.DueDate < DateTime.Now.AddDays(1);
-            var taskStyle = isDueSoon ? "background-color: red;" : "";
-            var taskClass = todo.IsCompleted ? "completed-task" : ""; *@
-
             <div class="card pb-2">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-3">
-                            <h4 style="text-decoration: @(todo.IsCompleted ? "line-through" : "none");">
+                            <h5 style="text-decoration: @(todo.IsCompleted ? "line-through" : "none");">
                                 <input class="ml-2 mr-2" type="checkbox" @* @checked="@todo.IsCompleted" *@ style="margin-right: 5px;" />
                                 @todo.Title
-                            </h4>
+                            </h5>
                         </div>
                         <div class="col-md-3">
                             @if (@todo.IsCompleted == false)
@@ -83,13 +74,13 @@
                                 </p>
                                 <style>
                                     .circle {
-                                        display: inline-block;
-                                        width: 15px; /* Circle size */
-                                        height: 15px;
-                                        background-color: green; /* Circle color */
-                                        border-radius: 50%; /* Make it a circle */
-                                        margin-left: 5px; /* Space between text and circle */
-                                        vertical-align: middle; /* Align circle with text */
+                                    display: inline-block;
+                                    width: 15px; /* Circle size */
+                                    height: 15px;
+                                    background-color: green; /* Circle color */
+                                    border-radius: 50%; /* Make it a circle */
+                                    margin-left: 5px; /* Space between text and circle */
+                                    vertical-align: middle; /* Align circle with text */
                                     }
                                 </style>
                             }
@@ -100,23 +91,65 @@
                         <div class="col-md-3">
                             <p>Due Date: <span>@todo.DueDate.ToString("yyyy-MM-dd")</span></p>
                         </div>
-
                     </div>
-     
                 </div>
-                @*   <div class="separator"></div> <!-- Yellow thick line --> *@
             </div>
-
         }
-
         <br/>
-
     </div>
 </div>
 
 
+@if (isModalVisible)
+{
+    <div class="modal-overlay">
+        <div class="modali">
+            <h3>Add Todo</h3>
+            <EditForm Model="Todoos" >
+                <div class="form-group">
+                    <label for="name">Title</label>
+                    <InputText id="name" class="form-control" @bind-Value="Todoos.Title" />
+                </div>
+                <div class="form-group">
+                    <label for="DueDate">Due Date</label>
+                    <InputDate id="name" class="form-control" @bind-Value="Todoos.DueDate" />
+                </div>
+                <button type="submit" class="btn btn-success" @onclick="()=>AddTodo(Todoos)">Submit</button>
+                <button type="button" class="btn btn-secondary" @onclick="()=>CloseModal()">Close</button>
+            </EditForm>
+        </div>
+        <style>
+            .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            }
+
+            .modali {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            button {
+            margin-top: 10px;
+            }
+        </style>
+    </div>
+}
+
 @code {
     private List<TodoItem> Todos= new List<TodoItem>();
+    private TodoItem Todoos = new TodoItem();
+    private bool isModalVisible = false;
     private string newTodoTitle;
     private DateTime newTodoStartDate = DateTime.Now;
     private DateTime newTodoDueDate = DateTime.Now.AddDays(1);
@@ -128,22 +161,26 @@
         Todos = await TodoService.GetTodosAsync();
     }
 
-    private async Task AddTodo()
+
+    private void OpenModal()
     {
-        if (!string.IsNullOrWhiteSpace(newTodoTitle))
-        {
-            var todo = new TodoItem
+     
+        isModalVisible = true;  
+    }
+    private async Task AddTodo(TodoItem model)
+    {
+        var todo = new TodoItem
             {
-                Title = newTodoTitle,
-                StartDate = newTodoStartDate,
-                DueDate = newTodoDueDate,
+                Title = model.Title,
+                StartDate = DateTime.UtcNow,
+                DueDate = model.DueDate,
                 IsCompleted = false
             };
 
-            await TodoService.AddTodoAsync(todo);
-            Todos = await TodoService.GetTodosAsync();  // Re-fetch the list
-            newTodoTitle = string.Empty;
-        }
+        await TodoService.AddTodoAsync(todo);
+        Todos = await TodoService.GetTodosAsync();  // Re-fetch the list
+        isModalVisible = false;
+
     }
 
     private async Task DeleteTodo(int id)
@@ -185,5 +222,10 @@
     {
         editTodoId = null;
         editTodoTitle = string.Empty;
+    }
+
+    public void CloseModal()
+    {
+        isModalVisible = false;
     }
 }
