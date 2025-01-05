@@ -40,7 +40,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <h5 style="text-decoration: @(todo.IsCompleted ? "line-through" : "none");">
-                                <input class="ml-2 mr-2" type="checkbox" @* @checked="@todo.IsCompleted" *@ style="margin-right: 5px;" />
+                                <input  class="ml-2 mr-2" type="checkbox" @checked="todo.IsCompleted" style="margin-right: 5px;" />
                                 @todo.Title
                             </h5>
                         </div>
@@ -101,7 +101,7 @@
                         <div class="col-md-3">
                             <div style="margin-left:40px;" class="icon-container">
                                 <!-- Edit Icon -->
-                                <button >
+                                <button @onclick="()=>UpdateTodoCompletion(todo.Id)">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
 
