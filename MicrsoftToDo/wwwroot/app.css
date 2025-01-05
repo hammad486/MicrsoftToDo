@@ -72,3 +72,15 @@ h1:focus {
 button {
     margin-top: 10px;
 }
+
+.icon-container button {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+    .icon-container button:hover {
+        color: #007bff;
+    }

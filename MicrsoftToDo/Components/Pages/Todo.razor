@@ -6,7 +6,7 @@
 
 <div class="col-md-12">
     <div class="col-md-3">
-
+    
     </div>
     <div>
         <div class="row mt-3 ">
@@ -86,10 +86,43 @@
                             }
                         </div>
                         <div class="col-md-3">
-                            <p>Created At: <span>@todo.StartDate.ToString("yyyy-MM-dd")</span></p>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <p><span>@todo.StartDate.ToString("yyyy-MM-dd")</span></p>
+                                </div>
+                                <div class="col-md-2">
+
+                                </div>
+                                <div class="col-md-5">
+                                    <p><span>@todo.DueDate.ToString("yyyy-MM-dd")</span></p>
+                                </div>                          
+                            </div>             
                         </div>
                         <div class="col-md-3">
-                            <p>Due Date: <span>@todo.DueDate.ToString("yyyy-MM-dd")</span></p>
+                            <div style="margin-left:40px;" class="icon-container">
+                                <!-- Edit Icon -->
+                                <button >
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+
+                                <!-- Delete Icon -->
+                                <button @onclick="()=>DeleteTodo(todo.Id)">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </div>
+                            <style>
+                                .icon-container button {
+                                    background-color: transparent;
+                                    border: none;
+                                    font-size: 13px;
+                                    cursor: pointer;
+                                    margin: 4px;
+                                }
+
+                                    .icon-container button:hover {
+                                        color: #007bff;
+                                    }
+                            </style>
                         </div>
                     </div>
                 </div>
