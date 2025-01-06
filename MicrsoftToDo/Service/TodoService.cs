@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MicrsoftToDo.Models;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace MicrsoftToDo.Service
 {
@@ -37,6 +39,16 @@ namespace MicrsoftToDo.Service
                 _context.TodoItems.Remove(todo);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task< List<TodoItem?>> SearchBoxAsync()
+        {
+            var todo = await _context.TodoItems.ToListAsync();
+            return todo;
+            //if (todo != null)
+            //{
+            //    _context.TodoItems.Remove(todo);
+            //    await _context.SaveChangesAsync();
+            //}
         }
     }
 }
