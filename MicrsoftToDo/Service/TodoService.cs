@@ -40,9 +40,9 @@ namespace MicrsoftToDo.Service
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task< List<TodoItem?>> SearchBoxAsync()
+        public async Task<List<TodoItem>> SearchBoxAsync(string name)
         {
-            var todo = await _context.TodoItems.ToListAsync();
+            var todo = await _context.TodoItems.Where(a => a.Title == name).ToListAsync();   
             return todo;
             //if (todo != null)
             //{
