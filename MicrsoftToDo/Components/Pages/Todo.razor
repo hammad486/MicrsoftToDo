@@ -20,6 +20,7 @@
         <div class="row mt-2">
             <div class="col-md-3">
                 <input @bind="newTodoTitle" placeholder="Search Task" />
+                <button class="btn btn-primary" @onclick="()=>searchAsync()">Search</button>
             </div>
             <div class="col-md-3">
 
@@ -275,5 +276,9 @@
     public void CloseModal()
     {
         isModalVisible = false;
+    }
+    private async Task  searchAsync()
+    {
+        Todos =await TodoService.SearchBoxAsync();
     }
 }
