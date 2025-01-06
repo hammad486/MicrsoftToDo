@@ -249,7 +249,7 @@
             { 
                 todo.IsCompleted = true;
             }
-          
+
             await TodoService.UpdateTodoAsync(todo);
             Todos = await TodoService.GetTodosAsync();  
         }
@@ -279,6 +279,7 @@
     }
     private async Task  searchAsync()
     {
-        Todos =await TodoService.SearchBoxAsync();
+        var ak = newTodoTitle;
+        Todos =await TodoService.SearchBoxAsync(ak);
     }
 }
